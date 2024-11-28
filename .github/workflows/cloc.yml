@@ -1,0 +1,30 @@
+name: Cloc by GitHub Actions
+
+on:
+  schedule:
+    - cron: '0 22 * * *'
+
+jobs:
+  count-lines:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install cloc
+      run: sudo apt-get install -y cloc
+    - name: Run cloc
+      run: cloc . --out=cloc-report.txt
+    - name: Run cloc for csv
+      run: cloc . --csv --by-file --report-file="cloc-report.csv"
+    - name: Upload cloc report
+      uses: actions/upload-artifact@v4
+      with:
+        name: cloc-report
+        path: cloc-report.txt
+    - name: Upload cloc csv report
+      uses: actions/upload-artifact@v4
+      with:
+        name: cloc-report-csv
+        path: cloc-report.csv
+    - name: actions-cloc
+      uses: maxfie1d/actions-cloc@v1
